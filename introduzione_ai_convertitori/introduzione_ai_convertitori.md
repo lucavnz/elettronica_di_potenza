@@ -1,0 +1,3 @@
+Elettronica di potenza = gestire, adattare e convertire energia elettrica per le esigenze di un carico specifico. Se faccio partitore resistivo o con un semplice transistore lineare (almeno cosi posso controllare la corrente di base x regolare la corrente che sputo fuori) consumo un botto per niente perchè dissipano entrambi le soluzioni in calore.
+
+Quindi per fare convertitori dobbiamo usare componenti che **non** dissipano: induttori, condensatori e transistor però usati come interruttori! Cioè CA/CC.

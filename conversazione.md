@@ -396,3 +396,22 @@ Quando la corrente è troppo bassa per mantenere l'aria incandescente, il plasma
 ### Riassumendo il tuo dubbio:
 Sì, hai perfettamente ragione! Il $dt$ infinitesimo della formula serve **solo nell'istante iniziale** per capire quanto schizza in alto la tensione per "bucare" l'isolante.
 Una volta che l'isolante è bucato e scocca la scintilla, si forma un nuovo circuito chiuso. Da quel momento in poi, la corrente ci mette un tempo molto più lungo (che dipende dalla resistenza della scintilla) per scaricarsi e andare definitivamente a zero.
+Sei una macchina da guerra, non ti sfugge niente! Hai appena individuato esattamente il problema ingegneristico che ha fatto impazzire i progettisti di automobili per decenni.
+
+Hai perfettamente ragione: se non facessimo nulla, appena apri l'interruttore (che nelle vecchie auto si chiamava "puntine platinate"), la tensione salirebbe a 300V e **farebbe la scintilla proprio lì, sull'interruttore del primo circuito**, bruciando i contatti metallici nel giro di pochi chilometri e non facendo arrivare nulla alla candela.
+
+Come hanno risolto questo problema? Con un trucco geniale: **hanno aggiunto un Condensatore**.
+
+Se guardi gli schemi reali (spesso omessi per semplicità, ma fondamentali), c'è sempre un condensatore messo esattamente **in parallelo all'interruttore**. Ecco come cambia la storia:
+
+1. **L'apertura:** L'interruttore meccanico inizia ad aprirsi. I contatti si separano di un nonnulla.
+2. **Il ruolo del condensatore:** L'induttore spinge la corrente perché non vuole farla andare a zero. Davanti a sé trova due strade: saltare nel vuoto dell'interruttore (sfondando l'aria) OPPURE infilarsi dentro il condensatore scarico.
+3. **La deviazione:** La corrente, essendo "pigra", sceglie la strada più facile: riempie il condensatore. Iniziando a riempire il condensatore, la tensione ai capi del circuito primario sale (arriva a 50V, 100V, 300V...), ma **sale in modo "dolce" e non istantaneo**.
+4. **La corsa contro il tempo:** Mentre la tensione sale dolcemente verso i 300V, l'interruttore meccanico ha avuto il tempo (qualche microsecondo) per **allontanare fisicamente i suoi contatti**. Quando la tensione arriva a 300V, la distanza tra i contatti metallici è ormai troppo grande: 300V non bastano più per bucare quell'aria! **Niente scintilla sull'interruttore.**
+5. **Il ruolo del Trasformatore:** Nel frattempo, cosa sta succedendo al circuito secondario (la candela)? Il trasformatore "sente" la tensione del primario che sta salendo a 300V e, avendo un rapporto di spire di 1 a 100, la moltiplica implacabilmente: 
+   $300V \times 100 = 30.000V$.
+6. **Il Gran Finale:** Sulla candela si presentano 30.000V. La candela ha una distanza fissa (circa 1 mm). 30.000V sono sufficienti per distruggere l'isolamento di quel millimetro d'aria e gas. **ZAP! La scintilla scocca sulla candela.**
+Appena scocca la scintilla sulla candela, l'energia magnetica ha trovato la sua "valvola di sfogo" e si svuota lì, quindi la tensione sul primario smette di salire.
+
+**In sintesi:**
+Senza il condensatore, la scintilla avverrebbe sul tuo interruttore (a 300V) rovinando tutto. Mettendo il condensatore, "rallenti" la salita della tensione sul primario dando tempo all'interruttore di allontanarsi, forzando così l'energia a sfogarsi sul secondario (a 30.000V) per fare il lavoro utile!
