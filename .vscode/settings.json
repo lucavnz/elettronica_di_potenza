@@ -1,0 +1,13 @@
+{
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": "on",
+      "comments": "on",
+      "strings": "on"
+    },
+    "editor.snippetSuggestions": "top",
+    "editor.suggestOnTriggerCharacters": true
+  },
+  "markdown.math.enabled": true,
+  "markdown.preview.math.enabled": true
+}

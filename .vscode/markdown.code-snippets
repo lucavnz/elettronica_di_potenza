@@ -1,0 +1,159 @@
+{
+  "Subscript Auto-Braces": {
+    "scope": "markdown",
+    "prefix": "_",
+    "body": [
+      "_{${1:pedice}}$0"
+    ],
+    "description": "Auto braces for subscript"
+  },
+  "Superscript Auto-Braces": {
+    "scope": "markdown",
+    "prefix": "^",
+    "body": [
+      "^{${1:apice}}$0"
+    ],
+    "description": "Auto braces for superscript"
+  },
+  "V_in": {
+    "scope": "markdown",
+    "prefix": "Vin",
+    "body": [
+      "V_{in}$0"
+    ],
+    "description": "V_in with braces"
+  },
+  "V_out": {
+    "scope": "markdown",
+    "prefix": "Vout",
+    "body": [
+      "V_{out}$0"
+    ],
+    "description": "V_out with braces"
+  },
+  "I_in": {
+    "scope": "markdown",
+    "prefix": "Iin",
+    "body": [
+      "I_{in}$0"
+    ],
+    "description": "I_in with braces"
+  },
+  "I_out": {
+    "scope": "markdown",
+    "prefix": "Iout",
+    "body": [
+      "I_{out}$0"
+    ],
+    "description": "I_out with braces"
+  },
+  "V_ds": {
+    "scope": "markdown",
+    "prefix": "Vds",
+    "body": [
+      "V_{DS}$0"
+    ],
+    "description": "V_ds with braces"
+  },
+  "V_gs": {
+    "scope": "markdown",
+    "prefix": "Vgs",
+    "body": [
+      "V_{GS}$0"
+    ],
+    "description": "V_gs with braces"
+  },
+  "R_ds(on)": {
+    "scope": "markdown",
+    "prefix": "Rds",
+    "body": [
+      "R_{DS(on)}$0"
+    ],
+    "description": "R_ds(on) with braces"
+  },
+  "f_sw": {
+    "scope": "markdown",
+    "prefix": "fsw",
+    "body": [
+      "f_{sw}$0"
+    ],
+    "description": "f_sw switching frequency"
+  },
+  "T_s": {
+    "scope": "markdown",
+    "prefix": "Ts",
+    "body": [
+      "T_{s}$0"
+    ],
+    "description": "T_s switching period"
+  },
+  "Math Inline": {
+    "scope": "markdown",
+    "prefix": "$$",
+    "body": [
+      "$$",
+      "  $0",
+      "$$"
+    ],
+    "description": "Block LaTeX Math"
+  },
+  "Fraction": {
+    "scope": "markdown",
+    "prefix": "\\frac",
+    "body": [
+      "\\frac{${1:num}}{${2:den}}$0"
+    ],
+    "description": "LaTeX Fraction"
+  },
+  "Square Root": {
+    "scope": "markdown",
+    "prefix": "\\sqrt",
+    "body": [
+      "\\sqrt{${1:x}}$0"
+    ],
+    "description": "LaTeX Square Root"
+  },
+  "Integral": {
+    "scope": "markdown",
+    "prefix": "\\int",
+    "body": [
+      "\\int_{${1:a}}^{${2:b}} ${3:f(x)} \\, d${4:x}$0"
+    ],
+    "description": "LaTeX Definite Integral"
+  },
+  "Summation": {
+    "scope": "markdown",
+    "prefix": "\\sum",
+    "body": [
+      "\\sum_{${1:i=1}}^{${2:n}} $0"
+    ],
+    "description": "LaTeX Summation"
+  },
+  "Vector": {
+    "scope": "markdown",
+    "prefix": "\\vec",
+    "body": [
+      "\\vec{${1:v}}$0"
+    ],
+    "description": "LaTeX Vector"
+  },
+  "Partial Derivative": {
+    "scope": "markdown",
+    "prefix": "\\pder",
+    "body": [
+      "\\frac{\\partial ${1:f}}{\\partial ${2:x}}$0"
+    ],
+    "description": "LaTeX Partial Derivative"
+  },
+  "Matrix 2x2": {
+    "scope": "markdown",
+    "prefix": "\\matrix",
+    "body": [
+      "\\begin{bmatrix}",
+      "  ${1:a} & ${2:b} \\\\\\\\",
+      "  ${3:c} & ${4:d}",
+      "\\end{bmatrix}$0"
+    ],
+    "description": "LaTeX Matrix"
+  }
+}
