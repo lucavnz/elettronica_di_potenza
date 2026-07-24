@@ -1,52 +1,73 @@
-Edited view
-Viewed view:15-19
+Ok, fermi tutti. Ho capito esattamente dov'è il cortocircuito logico.
+Il tuo cervello sta (giustamente) pensando: *"Se la tensione Vout è costante, vuol dire che il condensatore non si sta scaricando. E se non si scarica, ricevendo sempre colpi dall'induttore, dovrebbe andare all'infinito!"*
 
-Hai ragionissimo, la magia sta proprio nei "passaggi logici" e in cosa fa fisicamente questo amplificatore. Facciamo finta di essere al rallentatore (slow motion) e vediamo cosa succede istante per istante.
+L'errore è confondere la **TENSIONE** con la **CARICA (CORRENTE)**.
 
-Prima una precisazione: nella slide 6 è disegnato un **BJT** (Bipolar Junction Transistor). Il BJT si comanda in **corrente** (iniettando corrente nella Base). Se fosse stato un MOSFET si sarebbe comandato in **tensione** (applicando tensione al Gate). Teniamo l'esempio del BJT della slide.
+### Il trucco dell'Oceano (Perché si scarica ma Vout non cala)
 
-Immaginiamo che il sistema sia in equilibrio perfetto: $V_o = 50V$, $V_{ref} = 50V$. 
+Il condensatore **SI SCARICA ECCOME!** Butta fiumi di corrente dentro la resistenza $R$ in ogni istante. Perde una quantità enorme di carica ($Q$).
 
-**Evento:** Improvvisamente attacchi un altro carico pesante. Il circuito ha bisogno di più corrente.
+Ma guarda la formula del condensatore: 
+$$ \Delta V = \frac{\Delta Q}{C} $$
+(Variazione di tensione = Carica persa / Capacità).
 
-Ecco i passaggi logici:
+Se tu perdi molta carica $\Delta Q$, ma io ingegnere ho installato un condensatore $C$ **GIGANTESCO** (un oceano), il risultato della divisione $\Delta V$ diventa **zero virgola qualcosa**.
 
-### 1. Il "Crollo" iniziale
-Poiché il transistore non ha ancora reagito (è rimasto impostato per erogare la corrente di prima), il nuovo carico "succhia" energia più velocemente di quanta ne arrivi. Risultato immediato: **la tensione $V_o$ inizia a scendere**. Diciamo che scende a **$49.9V$**.
+*   L'oceano perde migliaia di litri d'acqua (carica) al secondo per colpa del carico $R$? **SÌ.**
+*   L'induttore in Fase 2 ributta dentro migliaia di litri d'acqua ripristinando esattamente l'equilibrio? **SÌ.**
+*   Il livello dell'oceano (la tensione $V_{out}$) si alza e si abbassa a causa di questo scambio selvaggio? **NO, praticamente resta immobile!** Si muove al massimo di qualche millivolt.
 
-### 2. La nascita dell'Errore
-Il nodo sommatore se ne accorge in una frazione di microsecondo. 
-Calcola l'errore: $\epsilon = V_{ref} - V_o = 50V - 49.9V = \mathbf{+0.1V}$.
-Questo $+0.1V$ è il segnale d'errore.
+Ecco perché io posso tranquillamente calcolare le mie equazioni assumendo che $V_{out}$ sia "costante". Non è costante perché è inattivo, è costante perché il "secchio" è così grande che non vedi increspature sulla superficie! E l'equilibrio è salvo: l'acqua entra e l'acqua esce. Niente va all'infinito.
 
-### 3. L'Amplificazione (Cosa esce dall'amplificatore?)
-L'errore entra nell'amplificatore (che è un Op-Amp). L'Op-Amp ha un guadagno altissimo, es. $A = 100.000$. 
-Il suo istinto matematico sarebbe moltiplicare: $0.1V \times 100.000 = 10.000V$. 
-Ovviamente non ha 10.000V a disposizione (sarà alimentato magari a 15V)! Quindi l'amplificatore "spara" istantaneamente la sua uscita al massimo che può. 
-Questa uscita è collegata al "base driver", che converte questo "urlo" dell'amplificatore in una **corrente massiccia iniettata nella Base del transistore ($I_B$)**.
+---
 
-### 4. La reazione del Transistore (La Forza Bruta)
-Il BJT riceve questa enorme "fiondata" di corrente di base $I_B$. Siccome il BJT amplifica la corrente (corrente di emettitore $I_E = \beta \cdot I_B$), si "spalanca". 
-Spalancandosi (cioè abbassando violentemente la sua resistenza interna), lascia passare una valanga di corrente dai 100V di ingresso verso l'uscita.
+### La Derivazione Ufficiale (I Passaggi Logici)
 
-### 5. Il ripristino
-Tutta questa nuova corrente arriva sul carico. Avendo più corrente, **la tensione $V_o$ inizia a risalire a razzo**: $49.9V \rightarrow 49.95V \rightarrow 49.99V$...
+Adesso che abbiamo chiarito che $V_{out}$ è un numero fisso e stabile (es. $24V$) pur scambiando ferocemente energia, ecco come l'elettronica di potenza dimostra il guadagno.
 
-### 6. L'Equilibrio finale
-Mano a mano che $V_o$ si riavvicina a 50V, l'errore $\epsilon$ diventa sempre più piccolo.
-*   Quando $V_o = 49.999V$, l'errore è piccolissimo ($0.001V$).
-*   L'amplificatore moltiplica questo errorino per il suo guadagno gigante: $0.001V \times 100.000 = 100$.
-*   Ora l'amplificatore non sta più "sparando al massimo", ma sta iniettando solo la corrente *esattamente necessaria* per mantenere quell'equilibrio.
+Tutto ruota attorno a un'unica legge della fisica: in un circuito che lavora a regime (cioè non è appena stato acceso, ma gira stabile), **l'induttore deve iniziare e finire ogni ciclo esattamente con la stessa corrente**.
+Se inizia un ciclo a 10A, a fine ciclo DEVE essere a 10A. (Se non fosse così, la corrente media starebbe salendo verso l'infinito o scendendo a zero).
 
-### Perché diciamo che matematicamente $V_o = V_{ref}$?
-In realtà, $V_o$ **non sarà mai perfettamente identica** a $V_{ref}$, altrimenti l'errore sarebbe $0$, l'amplificatore produrrebbe $0$, il transistore si spegnerebbe e l'uscita crollerebbe!
+La formula dell'induttore è: $v_L(t) = L \cdot \frac{di_L}{dt}$.
+Se moltiplichi a destra e sinistra per $dt$ ottieni:
+$v_L(t) dt = L \cdot di_L$.
 
-Ci sarà sempre un errore microscopico "residuo" (es. $0.0001V$) che tiene l'amplificatore costantemente "in tensione" per pilotare il transistore. Ma siccome $49.9999V$ è praticamente uguale a $50V$, per noi ingegneri $V_o = V_{ref}$.
+Se **integriamo** questa formula su un intero ciclo (da $0$ a $T$), a destra la variazione totale di corrente $\Delta i_L$ sappiamo che deve fare **zero**.
+Quindi otteniamo la Legge del **Bilanciamento dei Volt-Secondo**:
+$$ \text{Area di } v_L \text{ nel ciclo intero} = 0 $$
+L'area positiva deve cancellare l'area negativa.
 
-Ecco la dimostrazione matematica in una riga:
-$$ V_o = A \cdot \text{Errore} $$
-$$ V_o = A \cdot (V_{ref} - V_o) $$
-Dividendo tutto:
-$$ V_o = V_{ref} \cdot \frac{A}{1+A} $$
-Se il guadagno $A$ è enorme (es. 100.000), la frazione $\frac{100000}{100001}$ è praticamente **$1$**.
-Ecco dimostrato matematicamente e logicamente perché $V_o = V_{ref}$ !
+Calcoliamo le aree nei due tempi:
+
+**1. Sottofase ON (Tempo $t_{on} = D \cdot T$):**
+L'interruttore collega l'induttore tra la batteria $V_g$ e la massa.
+Tensione sull'induttore: $v_L = V_g$
+L'area di questo rettangolo è:
+**Area ON** = $V_g \cdot (D \cdot T)$
+
+**2. Sottofase OFF (Tempo $t_{off} = (1-D) \cdot T$):**
+L'interruttore collega l'induttore al condensatore d'uscita. 
+Tensione sull'induttore: $v_L = V_g - V_{out}$. 
+*(Qui usiamo l'Approssimazione dell'Oceano: $V_{out}$ è un numero fisso anche se si sta scaricando e caricando furiosamente di corrente).*
+L'area di questo rettangolo è:
+**Area OFF** = $(V_g - V_{out}) \cdot (1-D) \cdot T$
+
+**3. L'Equazione di Bilancio:**
+Sommiamo le due aree e le poniamo uguali a zero!
+$$ V_g \cdot D \cdot T + (V_g - V_{out}) \cdot (1-D) \cdot T = 0 $$
+
+*   Divido tutto per $T$ e sparisce il tempo:
+    $$ V_g \cdot D + (V_g - V_{out}) \cdot (1-D) = 0 $$
+*   Moltiplico la parentesi a destra:
+    $$ V_g \cdot D + V_g \cdot (1-D) - V_{out} \cdot (1-D) = 0 $$
+*   Raccogliamo $V_g$ nei primi due termini:
+    $$ V_g \cdot (D + 1 - D) - V_{out} \cdot (1-D) = 0 $$
+*   Dentro la parentesi $(D + 1 - D)$ le D si annullano, rimane solo $1$:
+    $$ V_g \cdot (1) - V_{out} \cdot (1-D) = 0 $$
+*   Porto il termine con $V_{out}$ dall'altra parte dell'uguale:
+    $$ V_g = V_{out} \cdot (1-D) $$
+*   E infine isolo il Guadagno:
+    $$ \frac{V_{out}}{V_g} = \frac{1}{1-D} $$
+
+Questa è la dimostrazione matematica pura, senza analogie.
+E ti fa vedere come l'induttore, pur di mantenere l'equilibrio delle aree ($Area = 0$), costringe la $V_{out}$ (che è l'unica variabile libera in quella equazione) ad assestarsi esattamente al valore di $\frac{1}{1-D}$. E il condensatore, essendo un oceano, accetta questo livello di tensione fissato scambiando ferocemente l'acqua con la resistenza R per mantenere la pace.

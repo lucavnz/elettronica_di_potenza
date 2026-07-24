@@ -1,45 +1,45 @@
 Edited view
-Edited introduzione_ai_convertitori.md
-Viewed view:41-47
+Viewed view:41-64
 
-Hai ragione a essere confuso, questo è in assoluto uno dei concetti più controintuitivi dell'elettronica, ma una volta capito ti aprirà un mondo.
+Hai perfettamente ragione a prendermi in giro, la tua osservazione è **eccellente e acutissima**. 
 
-Rispondo subito alla tua domanda chiave: **Sì, la corrente alla fine DEVE per forza andare a zero** perché hai aperto il circuito. Ma è esattamente **il MODO** in cui va a zero che crea la magia. 
+È un errore tipico che si fa spiegando queste cose: si tende a "umanizzare" i componenti (come se l'induttore dicesse "oddio ho poco tempo, devo generare 100 Volt!"). 
+Ovviamente l'induttore è un pezzo di ferro con del filo arrotolato, è stupido, non sa il futuro e non sa quanto durerà la Fase 2. E no, non fornisce una corrente "costante", la sua corrente fa su e giù (a dente di sega).
 
-Cerchiamo di smontare il concetto di *"l'induttore si oppone"* e la formula $V = L \cdot \frac{di}{dt}$ con un esempio pratico e un'analogia perfetta.
+Quindi, come fa fisicamente ad arrivare a una tensione altissima se imposti un tempo $t_{off}$ piccolissimo? 
+La risposta sta nel **transitorio iniziale** (i primi millisecondi in cui accendi il circuito).
 
-### L'Analogia del tubo dell'acqua (Il Colpo d'Ariete)
-Immagina un tubo molto lungo e largo in cui scorre tantissima acqua ad alta velocità.
-L'acqua in movimento è la **corrente ($i$)**. La pressione dell'acqua è la **tensione ($V$)**.
-A un certo punto, chiudi una valvola a saracinesca in un millesimo di secondo. 
-L'acqua si ferma? **Sì, per forza, il tubo è chiuso.** (esattamente come la corrente che va a zero).
-Ma cosa succede alla tubatura? L'enorme massa d'acqua che era in movimento "sbatte" contro la valvola chiusa. Tutta quell'energia cinetica si trasforma istantaneamente in un **picco di pressione spaventoso** che può letteralmente far esplodere il tubo. 
-Questo fenomeno si chiama "colpo d'ariete". L'acqua si è opposta al blocco istantaneo creando un picco di pressione.
+Ti faccio vedere il "film" causale di cosa succede davvero, ciclo dopo ciclo. L'equilibrio si crea da solo per pura fisica.
 
-### Torniamo al nostro Induttore (Il colpo d'ariete elettrico)
-L'induttore fa esattamente la stessa cosa con gli elettroni. L'energia non è nell'acqua, ma nel **campo magnetico**.
+### L'accensione (La vera causa dell'aumento di tensione)
 
-**Fase 1 (Interruttore chiuso):**
-Scorrono, diciamo, **5 Ampere**. Il campo magnetico è bello carico.
+Mettiamo che tu accenda il circuito. Batteria a 5V ($V_g = 5$).
+Il tuo interruttore (che è stupido pure lui, fa solo su e giù guidato da un timer) ha un **Duty Cycle alto**: sta tanto in Fase 1 ($t_{on}$ lungo) e pochissimo in Fase 2 ($t_{off}$ brevissimo).
+Il condensatore all'inizio è scarico ($V_{out} = 0V$).
 
-**Fase 2 (Apri l'interruttore):**
-Tu apri il circuito. La corrente da 5 Ampere deve passare a 0 Ampere. 
-Quindi c'è una variazione di corrente? **SÌ!** La variazione è $di = 5A$.
-La cosa cruciale della formula è il tempo **$dt$**. Quanto tempo ci metti ad aprire il circuito? Una frazione di secondo. Diciamo $1$ microsecondo ($0,000001$ secondi).
+**Ciclo 1:**
+*   **Fase 1 (Lungo):** L'induttore vede 5V. La sua corrente sale, sale, sale. Mettiamo che arrivi a **3 Ampere**.
+*   **Fase 2 (Cortissimo):** Si passa sul condensatore (che è a 0V). L'induttore inizia a spingere carica nel condensatore, che si alza per esempio a 1V.
+    *Ora guarda bene la fisica:* la tensione che frena l'induttore in questa fase è $V_{out} - V_g$. Siccome $V_{out}$ è solo 1V, la "frenata" è leggerissima. E siccome il tempo $t_{off}$ è cortissimo, la corrente riesce a scendere pochissimo (diciamo che scende da 3A a **2.9A**).
+*   **Fine del Ciclo 1:** La corrente **non è tornata a zero** (come invece ti avevo erroneamente suggerito prima)! Ha fatto uno scalino. È partita da 0 ed è finita a 2.9A.
 
-Applichiamo la formula $V = L \cdot \frac{di}{dt}$:
-*   $L = 1$ Henry (per fare conti facili)
-*   $di = 5A$ (la corrente che varia da 5 a 0)
-*   $dt = 0,000001$ secondi
+**Ciclo 2, 3, 4... (La Valanga):**
+*   **Fase 1:** Si riparte! L'induttore si ricollega a massa. Ma stavolta non parte da 0, parte da 2.9A! E sale per un tempo lungo. Arriva a **5.9A**.
+*   **Fase 2:** Si stacca e va sul condensatore (che nel frattempo era arrivato a 1V). Con 5.9A che entrano, il condensatore si gonfia di brutto e sale a 2V, 3V, ecc. La "frenata" sull'induttore comincia a farsi sentire, ma il tempo $t_{off}$ è sempre cortissimo! Quindi la corrente scende, ma poco. Magari da 5.9A scende a **5.6A**.
+*   **Renditi conto di cosa sta succedendo:** Ciclo dopo ciclo, siccome il tempo di scarica ($t_{off}$) è troppo breve per contrastare la lunga rincorsa ($t_{on}$), **la corrente media nell'induttore sta montando verso l'infinito**, e questo fiume di corrente si sta riversando nel condensatore, **facendo salire $V_{out}$ sempre di più**.
 
-Guarda cosa succede alla formula:
-$$ V = 1 \cdot \frac{5}{0,000001} = \mathbf{5.000.000 \text{ Volts!}} $$
+### Quando si ferma questa valanga? (Il Regime Stazionario)
+Come ti dicevo, non c'è intelligenza. È il condensatore che, continuando a gonfiarsi ($V_{out}$ che sale a 5V, 10V, 15V, 20V...), crea una "pressione contraria" (la $V_L$ inversa) sempre più violenta contro l'induttore durante quella brevissima Fase 2.
 
-### Il significato vero di "si oppone"
-Quando diciamo che "l'induttore si oppone", **non** significa che riesce a impedire alla corrente di andare a zero. 
-Significa che, *piuttosto che farla andare a zero tranquillamente*, **l'induttore si trasforma temporaneamente in una gigantesca batteria da 5 milioni di Volt** per cercare di spingere quella corrente attraverso l'aria (cioè lo spazio vuoto dell'interruttore che hai appena aperto)!
+Se $V_{out}$ arriva, ad esempio, a **25V**, guarda cosa succede alla povera corrente in quel minuscolo $t_{off}$:
+La forza frenante è $V_L = V_{out} - V_g = 25 - 5 = \mathbf{20V}$.
+Una tensione contraria di 20V è in grado di letteralmente "abbattere" la corrente a una velocità spaventosa. 
+In questo momento, la fisica trova il suo equilibrio perfetto: la sberla di 20V riesce a far scendere la corrente nel *pochissimo* tempo $t_{off}$ **esattamente della stessa quantità** di quanto la batteria (a 5V) era riuscita a farla salire nel *lunghissimo* tempo $t_{on}$.
 
-Essendo diventato una batteria con una tensione mostruosa, questa tensione trova la strada più facile per sfogarsi: e qual è nel motore di un'auto? La candela! I 30.000V generati dall'induttore sono così potenti che "bucano" l'aria tra gli elettrodi della candela, facendo scoccare la scintilla. Durante la scintilla la corrente alla fine si scarica e va a zero.
+*   **Fase 1 (lunga a spinta debole di 5V):** la corrente sale da 10A a 12A.
+*   **Fase 2 (cortissima a frenata violenta di 20V):** la corrente scende da 12A a 10A.
 
-**In sintesi:** 
-Sì, la corrente varia (va a zero). Ma siccome la "costringi" a variare in un tempo cortissimo ($dt \approx 0$), la formula ci dice che la tensione prodotta ($V$) esplode verso l'infinito. È proprio questa fiondata di tensione che sfruttiamo nei convertitori!
+Ecco l'equilibrio! A questo punto $V_{out}$ smette di salire e si ferma a 25V. 
+Non è stato l'induttore a "decidere" di fare 25V perché aveva poco tempo. È stata la tensione del condensatore a salire inevitabilmente *fino a quando* non è diventata sufficientemente alta da frenare l'induttore nel tempo imposto dal timer.
+
+È più chiaro adesso il meccanismo causa-effetto?
