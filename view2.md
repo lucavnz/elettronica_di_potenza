@@ -46,3 +46,39 @@ Qui chiudiamo il cerchio con la tua domanda sugli amplificatori operazionali.
 
 **In Sintesi (Ottimo per i tuoi appunti in `.md`):**
 Mentre il regolatore lineare della slide 6 usava la retroazione per variare la *resistenza interna* del transistore (sprecando vagonate di Watt), il convertitore switching usa la retroazione per variare **la larghezza dell'impulso (il Duty Cycle $D$)** tramite un processo chiamato **PWM** (Pulse Width Modulation). Visto che il transistore lavora sempre e solo come interruttore ideale (ON/OFF), l'efficienza rimane altissima (spesso >95%) indipendentemente da come il Controller varia $D$!
+
+---
+
+Ok, via le analogie. Parliamo il linguaggio puro dell'elettronica a stato solido, delle giunzioni PN e dei datasheet.
+
+I 4 grafici della Slide 15 rappresentano i **Limiti Operativi** del dispositivo. 
+Gli assi sono esattamente le variabili ai morsetti principali:
+*   **Asse X (Orizzontale):** Tensione applicata al dispositivo quando il terminale di controllo gli impone di stare **SPENTO** ($I_B = 0$ per BJT, $V_{GS} = 0V$ per MOSFET). 
+    *   Destra ($V > 0$): $V_{CE} > 0$ oppure $V_{DS} > 0$.
+    *   Sinistra ($V < 0$): $V_{CE} < 0$ oppure $V_{DS} < 0$.
+*   **Asse Y (Verticale):** Corrente che attraversa il dispositivo quando il terminale di controllo gli impone di stare **ACCESO** (in saturazione o regione lineare).
+    *   Alto ($I > 0$): $I_C > 0$ (da C a E) oppure $I_D > 0$ (da D a S).
+    *   Basso ($I < 0$): $I_C < 0$ (da E a C) oppure $I_D < 0$ (da S a D).
+
+Vediamo i due componenti reali:
+
+### 1. BJT NPN (Single-Quadrant Switch)
+*   **Spento ($I_B = 0$):** 
+    Applichi $V_{CE} > 0$ (Collettore positivo rispetto all'Emettitore). La giunzione Base-Collettore (PN) è polarizzata inversamente. La regione di svuotamento regge la tensione (es. 100V). **Regge $V_{CE} > 0$.**
+    Applichi $V_{CE} < 0$. Cosa succede fisicamente? L'Emettitore (N) si trova a potenziale maggiore del Collettore (N). Se la Base è a 0V, mandi in breakdown (effetto valanga/Zener) la giunzione Base-Emettitore (che nei BJT regge solo 5-7V). Il dispositivo va in conduzione inversa incontrollata o si fonde. **NON sa bloccare $V_{CE} < 0$.**
+*   **Acceso (Saturazione, $I_B \gg 0$):**
+    Inietti portatori minoritari dall'Emettitore. La fisica del BJT è asimmetrica (il drogaggio dell'Emettitore è immensamente superiore a quello del Collettore). La corrente $I_C$ può fluire solo dal Collettore all'Emettitore ($I_C > 0$). **Non può sostenere correnti $I_C < 0$**.
+*   **Conclusione BJT:** Quadrante in alto a destra. Stop.
+
+### 2. Power MOSFET N-Channel (Current-Bidirectional)
+*   **Spento ($V_{GS} = 0V$):**
+    Applichi $V_{DS} > 0$. La giunzione tra il Body (P) e la regione di Drift del Drain (N-) è inversamente polarizzata. Sostiene tranquillamente anche 600V. **Regge $V_{DS} > 0$.**
+    Applichi $V_{DS} < 0$ (Source più alto del Drain). Qui entra in gioco la manifattura: nei MOSFET di potenza, per evitare il latch-up del BJT parassita interno, i costruttori **cortocircuitano fisicamente** il terminale di Source con il substrato Body (P). 
+    Risultato? Hai una giunzione PN gigante che va dal Source (Body P) al Drain (Regione N-). Questo è il famoso **Body Diode**. Se applichi $V_{DS} < 0$, questo diodo è polarizzato direttamente. Si accende a 0.7V e conduce migliaia di ampere. **Il MOSFET NON PUÒ, fisicamente, bloccare $V_{DS} < 0$.**
+*   **Acceso ($V_{GS} = 10V$):**
+    Sotto l'ossido del Gate si forma il Canale di Inversione (canale N). 
+    Questo canale è letteralmente un pezzo di semiconduttore drogato che si comporta come un puro resistore ($R_{DS(on)}$). Non è una giunzione PN, è un ponte. 
+    Se $V_{DS} > 0$, la corrente $I_D$ scorre da Drain a Source.
+    Se $V_{DS} < 0$, la corrente $I_D$ **scorre all'indietro** (da Source a Drain) *attraverso il canale*, saltando il Body Diode perché il canale ha una resistenza molto più bassa. 
+    **Sostiene correnti sia $I_D > 0$ che $I_D < 0$.**
+*   **Conclusione MOSFET:** Asse X bloccato solo a destra. Asse Y conduttivo sia in alto che in basso. Ovvero, il secondo grafico della Slide 15: Bidirezionale in Corrente.

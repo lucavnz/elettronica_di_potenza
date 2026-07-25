@@ -1,45 +1,44 @@
-Edited view
-Viewed view:41-64
+Calma, la terminologia dei libri fa schifo. Abbandoniamo l'elettronica per 5 minuti e usiamo un idraulico.
 
-Hai perfettamente ragione a prendermi in giro, la tua osservazione è **eccellente e acutissima**. 
+Immagina un tubo dell'acqua con una valvola a saracinesca (il tuo interruttore).
+*   **Sei Spento:** Hai chiuso la valvola.
+*   **Tensione (Asse X orizzontale):** È la PRESSIONE dell'acqua che spinge contro la valvola chiusa.
+*   **Sei Acceso:** Hai aperto la valvola.
+*   **Corrente (Asse Y verticale):** È L'ACQUA CHE SCORRE nel tubo.
 
-È un errore tipico che si fa spiegando queste cose: si tende a "umanizzare" i componenti (come se l'induttore dicesse "oddio ho poco tempo, devo generare 100 Volt!"). 
-Ovviamente l'induttore è un pezzo di ferro con del filo arrotolato, è stupido, non sa il futuro e non sa quanto durerà la Fase 2. E no, non fornisce una corrente "costante", la sua corrente fa su e giù (a dente di sega).
+### 1. Cosa cazzo significa "Bloccare la tensione positiva (o negativa)"?
 
-Quindi, come fa fisicamente ad arrivare a una tensione altissima se imposti un tempo $t_{off}$ piccolissimo? 
-La risposta sta nel **transitorio iniziale** (i primi millisecondi in cui accendi il circuito).
+Sei **SPENTO** (valvola chiusa). 
+Attacchi una pompa fortissima a SINISTRA che spinge verso destra a 100 bar (questa è la Tensione Positiva). La tua valvola è robusta, regge la pressione e non fa passare una goccia. 
+Complimenti, **sai bloccare la tensione positiva.**
 
-Ti faccio vedere il "film" causale di cosa succede davvero, ciclo dopo ciclo. L'equilibrio si crea da solo per pura fisica.
+Ora il tuo idraulico è ubriaco. Attacca la pompa a DESTRA e spinge l'acqua all'indietro verso sinistra (questa è la Tensione Negativa). 
+Cosa fa la tua valvola? 
+*   Se è un muro di cemento armato, regge. (Allora sa bloccare anche la tensione negativa).
+*   Se è fatta come una porta antipanico, cede subito! Si spalanca da sola e l'acqua le passa attraverso, anche se tu volevi tenerla chiusa! (Allora **NON** sa bloccare la tensione negativa).
 
-### L'accensione (La vera causa dell'aumento di tensione)
+Un Transistor base (BJT) è come la porta antipanico: se gli applichi la batteria al contrario, anche se il microcontrollore gli urla di stare spento, lui si brucia o conduce. Sa bloccare la pressione solo da un lato.
 
-Mettiamo che tu accenda il circuito. Batteria a 5V ($V_g = 5$).
-Il tuo interruttore (che è stupido pure lui, fa solo su e giù guidato da un timer) ha un **Duty Cycle alto**: sta tanto in Fase 1 ($t_{on}$ lungo) e pochissimo in Fase 2 ($t_{off}$ brevissimo).
-Il condensatore all'inizio è scarico ($V_{out} = 0V$).
+### 2. Il MOSFET: Perché è bidirezionale in Corrente (e NON in tensione)?
 
-**Ciclo 1:**
-*   **Fase 1 (Lungo):** L'induttore vede 5V. La sua corrente sale, sale, sale. Mettiamo che arrivi a **3 Ampere**.
-*   **Fase 2 (Cortissimo):** Si passa sul condensatore (che è a 0V). L'induttore inizia a spingere carica nel condensatore, che si alza per esempio a 1V.
-    *Ora guarda bene la fisica:* la tensione che frena l'induttore in questa fase è $V_{out} - V_g$. Siccome $V_{out}$ è solo 1V, la "frenata" è leggerissima. E siccome il tempo $t_{off}$ è cortissimo, la corrente riesce a scendere pochissimo (diciamo che scende da 3A a **2.9A**).
-*   **Fine del Ciclo 1:** La corrente **non è tornata a zero** (come invece ti avevo erroneamente suggerito prima)! Ha fatto uno scalino. È partita da 0 ed è finita a 2.9A.
+Analizziamo il MOSFET (è l'esempio migliore di tutti).
+Il MOSFET ha due piedini in cui passa l'acqua: Drain (Ingresso) e Source (Uscita).
 
-**Ciclo 2, 3, 4... (La Valanga):**
-*   **Fase 1:** Si riparte! L'induttore si ricollega a massa. Ma stavolta non parte da 0, parte da 2.9A! E sale per un tempo lungo. Arriva a **5.9A**.
-*   **Fase 2:** Si stacca e va sul condensatore (che nel frattempo era arrivato a 1V). Con 5.9A che entrano, il condensatore si gonfia di brutto e sale a 2V, 3V, ecc. La "frenata" sull'induttore comincia a farsi sentire, ma il tempo $t_{off}$ è sempre cortissimo! Quindi la corrente scende, ma poco. Magari da 5.9A scende a **5.6A**.
-*   **Renditi conto di cosa sta succedendo:** Ciclo dopo ciclo, siccome il tempo di scarica ($t_{off}$) è troppo breve per contrastare la lunga rincorsa ($t_{on}$), **la corrente media nell'induttore sta montando verso l'infinito**, e questo fiume di corrente si sta riversando nel condensatore, **facendo salire $V_{out}$ sempre di più**.
+**A. Cosa fa quando è SPENTO? (Analisi dell'Asse X - Tensione)**
+Se metti 100V sul Drain, lui blocca tutto (Tensione Positiva, regge).
+Ma se l'idraulico ubriaco prova a mettere 100V sul Source (Tensione Negativa)... sorpresa! Il MOSFET, per come è fisicamente fuso nel silicio in fabbrica, ha dentro un **Diodo Parassita (Body Diode)** in parallelo.
+Questo diodo punta all'indietro (dal Source al Drain). Quindi se spingi la tensione all'indietro, il diodo si accende da solo! L'acqua passa!
+Risultato: Il MOSFET da spento **NON SA bloccare la tensione negativa**. Quindi l'asse X del suo grafico può esistere solo nella metà destra (positiva).
 
-### Quando si ferma questa valanga? (Il Regime Stazionario)
-Come ti dicevo, non c'è intelligenza. È il condensatore che, continuando a gonfiarsi ($V_{out}$ che sale a 5V, 10V, 15V, 20V...), crea una "pressione contraria" (la $V_L$ inversa) sempre più violenta contro l'induttore durante quella brevissima Fase 2.
+**B. Cosa fa quando è ACCESO? (Analisi dell'Asse Y - Corrente)**
+Mandi il segnale per accenderlo. Dentro il MOSFET si crea un "canale", un vero e proprio tunnel vuoto.
+In un tunnel vuoto, all'acqua non frega niente di che direzione prendere. Se la spingi in avanti, scorre in avanti (Corrente Positiva). Se la spingi all'indietro, scorre all'indietro (Corrente Negativa). 
+Risultato: Il MOSFET da acceso fa passare la corrente in ENTRAMBE le direzioni. L'asse Y del suo grafico va sia in alto che in basso.
 
-Se $V_{out}$ arriva, ad esempio, a **25V**, guarda cosa succede alla povera corrente in quel minuscolo $t_{off}$:
-La forza frenante è $V_L = V_{out} - V_g = 25 - 5 = \mathbf{20V}$.
-Una tensione contraria di 20V è in grado di letteralmente "abbattere" la corrente a una velocità spaventosa. 
-In questo momento, la fisica trova il suo equilibrio perfetto: la sberla di 20V riesce a far scendere la corrente nel *pochissimo* tempo $t_{off}$ **esattamente della stessa quantità** di quanto la batteria (a 5V) era riuscita a farla salire nel *lunghissimo* tempo $t_{on}$.
+**Conclusione:**
+Incrocia i due dati. Asse X solo a destra. Asse Y sia su che giù. 
+Guarda il grafico della slide 15 in alto a destra: **Current-Bidirectional two-quadrant switch**.
+È esattamente il ritratto sputato del MOSFET.
 
-*   **Fase 1 (lunga a spinta debole di 5V):** la corrente sale da 10A a 12A.
-*   **Fase 2 (cortissima a frenata violenta di 20V):** la corrente scende da 12A a 10A.
-
-Ecco l'equilibrio! A questo punto $V_{out}$ smette di salire e si ferma a 25V. 
-Non è stato l'induttore a "decidere" di fare 25V perché aveva poco tempo. È stata la tensione del condensatore a salire inevitabilmente *fino a quando* non è diventata sufficientemente alta da frenare l'induttore nel tempo imposto dal timer.
-
-È più chiaro adesso il meccanismo causa-effetto?
+E il **Voltage-Bidirectional**? (Basso a sinistra). 
+È un dispositivo che fa l'esatto contrario: da spento è un muro di cemento assoluto (blocca sia tensioni dritte che rovesce). Ma quando lo accendi, per qualche strano motivo, lascia scorrere la corrente solo in un verso. (Nella realtà, questo dispositivo esiste e si chiama Tiristore-SCR, usato nelle acciaierie e nei treni ad alta velocità).
