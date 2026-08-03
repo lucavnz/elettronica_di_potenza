@@ -1,0 +1,1 @@
+Convertitore Boost = innalzare una tensione. Da Vin arrivo a Vo.
