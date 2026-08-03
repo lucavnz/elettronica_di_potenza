@@ -11,3 +11,9 @@ Se ho un circuito semplicissimo con generatore di tensione e un interruttore che
 Filtro passa-basso LC = del secondo ordine con solo due componenti! Non come quelli RC di elettronica di base, in elettronica di potenza non posso usare resistenza, l'efficienza conta tantissimo qui.
 
 Se la tensione della batteria cala o il carico R cambia, serve un microcontrollare che modifichi in tempo reale il duty cycle. Nel caso del carico, cosa cambia se cambio R? Il guadagno DC! In realtà non è 1 ma c'è un partitore di resistenze tra la resistenza parassita dell'induttore e la resistenza di carico (in DC l'induttore è un CC).
+
+Nel caso di un convertitore Boost DC-DC, si applica il Volt-Second-Balance: la condizione di equilibrio si ha quando la variazione di corrente nella prima parte del ciclo = alla variazione di corrente nel secondo ciclo. Ovviamente ci sono tantissime ipotesi tipo che la tensione sul condensatore varia pochissimo e che il carico comunque fa in modo che mentre sono nella prima parte del ciclo svuota il condensatore di quel che basta per mantenere sempre a quel valore di equilibrio Vo.
+
+Il tiristore è un diodo con un terminale in più, quello di gate, di controllo. Anche se applico una tensione positiva, il tiristore rimane spento finchè non gli do un segnale di controllo di controllo di gate. Una volta accesso, però, perdo il controllo! Posso anche azzerare la corrente di gate, ma il tiristore resta acceso. Si spegne "da solo" quando la corrente del diodo scende sotto una soglia minima.
+
+Quello che fa $i_g$ non è creare l'accensione, ma abbassare drasticamente la tensione necessaria per l'innesco. Infatti, rimane pur sempre un bel diodo! Si tratta di un diodo la cui tensione di innesco è programmabile elettricamente!
