@@ -42,3 +42,14 @@ Se mettessimo un condensatore gigante il ripple andrebbe a zero, ma avremmo dei 
   * Sostituendo $I_C = 0$ nell'equazione, scopriamo che **$I_D = I_o$**. Tutta la corrente media "sputata" dal diodo va inevitabilmente a finire nel carico.
 * **Il ruolo fisico del condensatore:** Si comporta da ammortizzatore idraulico. Assorbe le "botte" (picchi) di corrente erogate dal diodo durante la Fase 2, e cede docilmente questa corrente al carico durante la Fase 1. In questo modo fa il lavoro sporco istante per istante, assicurandosi che il carico beva una $I_o$ bella costante.
 * **Calcolo della $I_D$ dal grafico:** La corrente istantanea del diodo $i_D$ è nulla in Fase 1 e uguale a $i_L$ (rampa decrescente) in Fase 2. Per trovare $I_D$ bisogna integrare sull'intero periodo e dividere per $T_s$. L'integrale non è altro che l'area del solito trapezio ($I_L \cdot D' T_s$). Dividendo per $T_s$, si ottiene **$I_D = I_L \cdot D' = (1-D)I_L$**.
+
+### 6. Modalità Continua (CCM) vs Discontinua (DCM) e il Rapporto di Conversione
+* **CCM (Continuous Conduction Mode):** La corrente nell'induttore oscilla ma **non scende mai a zero**. Il ciclo ha solo due fasi: $t_{ON}$ (durata $DT$) in cui l'interruttore è chiuso, e $t_{OFF}$ (durata $D'T = (1-D)T$) in cui l'interruttore è aperto. Il Volt-Second Balance (integrale della tensione su $T_s$) ci regala la classica formula $M = \frac{1}{1-D}$.
+* **DCM (Discontinuous Conduction Mode):** Se il carico è troppo leggero (corrente media bassa) o l'induttanza è piccola, la corrente scende così tanto in fase 2 che **sbatte sullo zero prima che finisca il periodo**. 
+  * In questo caso la Fase 2 non dura più tutto il tempo rimanente ($D'T$), ma dura di meno! Chiamiamo questa durata $D_2 T$ (con $D_2 < 1-D$).
+  * Compare una **Fase 3** in cui l'induttore rimane completamente scarico (corrente nulla, tensione nulla) fino all'inizio del nuovo ciclo.
+* **Cosa cambia nei conti:** Quando calcoliamo il Volt-Second Balance in DCM, il "rettangolo" negativo della fase 2 è più stretto (dura solo $D_2 T$). L'equazione delle aree (integrale) diventa:
+  $$ V_g \cdot D + (V_g - V_o) \cdot D_2 + 0 \cdot D_3 = 0 $$
+  Risolvendola scopriamo che la formula del guadagno cambia completamente:
+  $$ \frac{V_o}{V_g} = \frac{D + D_2}{D_2} = 1 + \frac{D}{D_2} $$
+* **Conseguenza fondamentale:** Poiché il tempo $D_2$ in cui l'induttore si scarica dipende da quanta energia assorbe il carico, **in DCM il rapporto di conversione non dipende più solo dal duty cycle $D$, ma inizia a dipendere fortemente anche dal carico $R$ e dall'induttanza $L$!**
